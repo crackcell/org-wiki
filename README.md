@@ -1,4 +1,4 @@
 org-wiki
 ========
 
-a static wiki generator for emacs org-mode files.
+generate org-mode files to wiki

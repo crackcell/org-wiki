@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Arduino版lifegame - crackcell's dustbin</title>
+   <meta name="author" content="crackcell" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+   <meta name="description" content="Arduino版lifegame  1 前言 2 硬件 3 实现 4 代码 " />
+   <meta name="keywords" content="搜索引擎,信息检索,机器学习,数据挖掘,search engine,information retrieval,machine learning,data mining ,存储空间,模拟程序,位操作">
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/static/css/screen.css" type="text/css" media="screen, projection" />
+   <!-- Customized CSS -->
+   <link rel="stylesheet" href="/static/css/mystyle.css" type="text/css" media="screen, projection" />
+   <!-- Org-mode CSS -->
+   <link rel="stylesheet" href="/static/org-mode/org-mode.css" type="text/css" media="screen, projection" />
+   <!-- Google Webfonts -->
+   <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Galdeano' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<div class="site">
+  <div id="post">
+    <h1>Arduino版lifegame</h1>
+    <p class="meta"></p>
+    <p style="color:#cccccc; font-size:12px;">/* -*- author: Tan Menglong; email: tanmenglong_at_gmail; twitter/weibo: @crackcell; 转载请注明出处 -*- */</p>
+    <div id="table-of-contents"><h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 前言</a></li>
+<li><a href="#sec-2">2 硬件</a></li>
+<li><a href="#sec-3">3 实现</a></li>
+<li><a href="#sec-4">4 代码</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 前言</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  Lifegame是一个在二维矩阵上的生命模拟程序，以下介绍摘自wiki<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>。
+  <quote>
+ 生命游戏其實是一個零玩家遊戲。它包括一个二维矩形世界，这个世界中的每个方格居住着一个活着的或死了的细胞。一个细胞在下一个时刻生死取决于相邻八个方格中活着的或死了的细胞的数量。如果相邻方格活着的细胞数量过多，这个细胞会因为资源匮乏而在下一个时刻死去；相反，如果周围活细胞过少，这个细胞会因太孤单而死去。实际中，玩家可以设定周围活细胞的数目怎样时才适宜该细胞的生存。如果这个数目设定过高，世界中的大部分细胞会因为找不到太多的活的邻居而死去，直到整个世界都没有生命；如果这个数目设定过低，世界中又会被生命充满而没有什么变化。
+  </quote>
+  之前实现了一个<a href="http://blog.crackcell.com/posts/2012/04/09/life_game_implemented_by_r.html">R的版本</a>， 最近新入手一块arduino的板子，偶来兴致，实现了个arduino的版本。
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 硬件</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>  设备很简单
+</p><ul>
+<li>Arudino Uno兼容的板一块
+</li>
+<li>LCD4884板一块
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 实现</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>  LCD4884板上有一块48 * 84的单色液晶屏，板子提供的库文件提供了简单的接口，但是还太简陋，需要包装一下，以提供简单的图形绘制功能。LCD屏每个像素是一个bit，每列8个bit组合成一个单元，即是说，屏幕上有6（行） * 84（列）个单元。单元是最小的数据写入单位，对每个像素的操作需要封装成位操作。可以利用库文件中的LCD_write_byte函数实现。这部分代码封装到了graphics.h/.cpp中。
+  剩下的部分就按部就班写就好了。Arudino Uno的板子只有32kb存储空间，得省着点用。
+</p></div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 代码</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>  完整代码在github上：<a href="https://github.com/crackcell/arduino-lifegame">https://github.com/crackcell/arduino-lifegame</a>。Enjoy
+  <div>
+  <img src="arduino_lifegame/arduino_lifegame.png">
+  </div>
+
+
+</p><div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> Wikipedia, <a href="http://zh.wikipedia.org/wiki/生命游戏">http://zh.wikipedia.org/wiki/%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F</a>
+</p></div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: Tue Oct 16 16:30:07 2012</p>
+<p class="author">Author: Tan Menglong</p>
+<p class="creator">Org version 7.8.11 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+
+
+<!--
+<div id="related">
+  <h2>Related Posts</h2>
+  <ul class="posts">
+      <li><span>03 May 2011</span> &raquo; <a href="/2011/05/03/rejected-bio-from-the-setup.html">Rejected Bio from The Setup</a></li>
+      <li><span>29 Mar 2011</span> &raquo; <a href="/2011/03/29/ten-lessons-from-githubs-first-year.html">Ten Lessons from GitHub's First Year</a></li>
+      <li><span>11 Dec 2010</span> &raquo; <a href="/2010/12/11/designer-architect-developer.html">Designer, Architect, Developer</a></li>
+  </ul>
+</div>    
+-->
+
+
+<div id="copyright">&copy Tan Menglong</div> 
+
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+  <span class="bds_more">分享到：</span>
+  <a class="bds_renren"></a>
+  <a class="bds_douban"></a>
+  <a class="bds_tsina"></a>
+  <a class="shareCount"></a>
+</div>
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=374352" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+  document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+
+<br/>
+<div id="comment">
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'crackcell-wiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+</div>
+
+</div>
+
+<!--
+<a href="http://bitbucket.org/crackcell"><img style="position: absolute; top: 0; right: 0; border: 0;" src="img/fork_me_bitbucket.png" alt="Fork me on Bitbucket" /></a>
+-->
+
+<!-- MathJax to support LaTeX -->
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<!-- Baidu -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?9cb60d7a2713d9f3f44a966f238942f3";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+</body>
+
+</html>
+

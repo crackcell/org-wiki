@@ -1,0 +1,143 @@
+body {
+    //font-family: galdeano;
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    //font-family: "Rosario", "Xin Gothic", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
+    line-height: 24px;
+}
+
+#post {
+    //font-family: 'Droid Sans', sans-serif;
+    //font: galdeano;
+    font: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 24px;
+}
+
+#post a {
+    text-decoration: none;
+}
+
+#text-table-of-contents {
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.outline-text-2 {
+    padding-left: 20px;
+}
+
+.outline-2 a {
+    color: #dd0000;
+    text-decoration: none;
+}
+
+.outline-text-3 {
+    //padding-top: 5px;
+    padding-left: 20px;
+}
+
+.outline-text-4 {
+    //padding-top: 5px;
+    padding-left: 20px;
+}
+
+pre {
+    word-wrap: break-word;
+    //font-family: 'Droid Sans Mono';
+    font-family: Menlo, "Andale Mono", Consolas, "Courier New", Monaco, monospace;
+    font-size: 13px;
+    background-color: #222222;
+    color: #ffffff;
+    padding: 10px;
+    border: 1px solid #DDEEF6;
+    -webkit-border-radius: 8px;
+}
+
+quote {
+    display: block;
+    text-align: justify;
+    margin: 1em 0em;
+    padding-left: 1em;
+    background: #fafafa;
+    border-left: 3px solid #ddd;
+    padding: 0px 10px;
+}
+
+blockquote {
+    display: block;
+    text-align: justify;
+    margin: 1em 0em;
+    margin-left: 40px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    background: #fafafa;
+    border-left: 3px solid #ddd;
+    padding: 0px 10px;
+}
+
+blockquote p {
+    margin-bottom: 0;
+    line-height: 27.5px;
+    font-family: Georgia, 'Times New Roman', '楷体', 'STKaiti', serif;
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+    margin-left: 0.5em;
+}
+
+blockquote small {
+    display: block;
+    line-height: 22px;
+    color: #999;
+    margin-left: 0.5em;
+}
+
+.verse {
+    display: block;
+    text-align: justify;
+    border-left: 4px solid #ddd;
+    margin: 1em 0em;
+    padding-left: 1em;
+    background: #fafafa;
+    line-height: 27.5px;
+    font-family: Georgia, 'Times New Roman', '楷体', 'STKaiti', serif;
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+}
+
+#footnotes {
+    margin-left: -20px;
+    margin-top: 20px;
+}
+
+#text-footnotes {
+    margin-left: 20px;
+}
+
+#postamble {
+    display: none;
+}
+
+#copyright {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.latex_formula {
+    font-size: 200%;
+}
+
+h3 {
+    margin-top: 10px;
+}
+
+.pos {
+    font-size: 11px;
+    margin-top: -10px;
+    color: #ffffff;
+}
+
+.pos a {
+    color: #ffffff;
+}
