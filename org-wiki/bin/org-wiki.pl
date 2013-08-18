@@ -315,14 +315,13 @@ sub render_tree_html {
     #print %{$tree}, "\n";
     if ($tree->{'type'} eq 'cate') {
         #print "cate\n";
-        ${$html} = ${$html} . "<li><input type=\"checkbox\" checked=\"checked\" /><label>" . $tree->{'label'} . "</label>\n" 
+        ${$html} = ${$html} . "<li item-checked=\"true\" item-expanded=\"true\"><a href=\"#\">" . $tree->{'label'} . "</a>\n" 
             ."<ul>\n";
         foreach my $child (keys %{$tree->{'children'}}) {
             render_tree_html($tree->{'children'}->{$child}, $html);
         }
         ${$html} = ${$html} . "</ul>\n</li>\n"
-    } elsif ($tree->{'type'} eq 'post') {
-        #print "\nxxx: ", keys $tree->{'data'}, "\n";
+    } elsif (($tree->{'type'} eq 'post') && length($tree->{'data'}->{'url'}) > 1) {
         ${$html} = ${$html} . "<li><a href=\"" . $tree->{'data'}->{'url'} . "\" target=\"content\">" . $tree->{'data'}->{'title'} . "</a></li>\n";
     }
 }
@@ -504,7 +503,6 @@ sub path_rel2abs {
     my $base_url = shift;
     my $path = shift;
     my $content_ptr = shift;
-    print "----->", $path, "\n";
     $base_url =~ s/\/+$//;
     $path =~ s/^\/+//;
 #    ${$content_ptr} =~ s/<img src="\.\//<img src="$base_url\/$path\//g;
