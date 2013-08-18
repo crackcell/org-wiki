@@ -13,7 +13,7 @@
   <link>http://blog.crackcell.com</link>
   <description>crackcell是一名搜索引擎从业者。本博客主要内容是搜索引擎相关的信息检索、机器学习、数据挖掘、自然语言处理等相关领域的心得体会。以及个人的学习笔记。希望通过写博客记录成长轨迹，同时多交朋友。</description>
   <language>zh_CN</language>
-  <lastBuildDate>20130818-1318
+  <lastBuildDate>20130818-1321
 </lastBuildDate>
 
 <!--
@@ -27,6 +27,73 @@
   </image>
 -->
 
+
+  <item>
+	<title>标题</title>
+	<author>crackcell</author>
+	<link>http://wiki.crackcell.compages/test/a.html</link>
+	<pubDate>2013-08-18</pubDate>
+	<description>
+	  <![CDATA[
+			   <p style="color:#cccccc; font-size:10px;">/* -*- author: Tan Menglong; email: tanmenglong_at_gmail; twitter/weibo: @crackcell; 转载请注明出处 -*- */</p>
+			   <div id="table-of-contents"><h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 test</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> test</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  sss
+</p></div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: Sun Aug 18 13:20:52 2013</p>
+<p class="author">Author: Tan Menglong</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.2 with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+
+	  ]]>
+	</description>
+	<content:encoded>
+	<![CDATA[
+			 <p style="color:#cccccc; font-size:10px;">/* -*- author: Tan Menglong; email: tanmenglong_at_gmail; twitter/weibo: @crackcell; 转载请注明出处 -*- */</p>
+			 <div id="table-of-contents"><h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 test</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> test</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  sss
+</p></div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: Sun Aug 18 13:20:52 2013</p>
+<p class="author">Author: Tan Menglong</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.2 with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+
+	]]>
+	</content:encoded>
+  </item>
 
 
 </channel>
