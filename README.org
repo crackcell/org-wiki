@@ -1,0 +1,11 @@
+# -*- mode: org -*-
+
+#+TITLE: README
+#+AUTHOR: Tan Menglong
+#+EMAIL: tanmenglong AT gmail DOT com
+#+DATE: Sun Aug 18 19:09:49 2013
+#+STYLE: <link rel="stylesheet" type="text/css" href="http://blog.crackcell.com/static/org-mode/org-mode.css" />
+
+* 用法
+  切换到org-wiki目录，命令行执行：
+  : make
