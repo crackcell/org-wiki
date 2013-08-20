@@ -271,8 +271,7 @@ sub export_attach {
 
     my $cmd;
     foreach my $meta_ref (@{$meta_list_ref}) {
-        #$cmd = "mkdir -p " . $meta_ref->{'url_path'};
-        #print $cmd, "\n";
+        $cmd = "mkdir -p \"" . $meta_ref->{'url_path'} . "\"";
         `$cmd`;
         $cmd = "cp \"" . $meta_ref->{'attach_file'} . "\" \"" . $meta_ref->{'url_path'} . "\"";
         print "copying: " . $meta_ref->{'attach_file'}, "\n";
@@ -403,14 +402,14 @@ sub render_tmpl {
 
         # mkdir for post and images
         if (scalar @img_list > 0) {
-            $cmd = "mkdir -p " . $meta_ref->{'post_img_path'};
+            $cmd = "mkdir -p \"" . $meta_ref->{'post_img_path'} . "\"";
             `$cmd`;
             foreach my $img (@img_list) {
-                $cmd = "cp $org_path/$category/$img " . $meta_ref->{'post_img_path'};
+                $cmd = "cp \"$org_path/$category/$img\" \"" . $meta_ref->{'post_img_path'} . "\"";
                 `$cmd`;
             }
         } else {
-            $cmd = "mkdir -p " . $meta_ref->{'post_path'};
+            $cmd = "mkdir -p \"" . $meta_ref->{'post_path'} . "\"";
             `$cmd`;
         }
 
