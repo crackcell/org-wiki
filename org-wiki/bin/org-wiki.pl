@@ -37,8 +37,8 @@ sub usage {
 
 ##! @todo: Dump a list for debug
 sub dump_list {
-    my $list_ptr = shift;
-    foreach my $item (@{$list_ptr}) {
+    my $list_ref = shift;
+    foreach my $item (@{$list_ref}) {
         print($item, "\n");
     }
 }
@@ -46,36 +46,36 @@ sub dump_list {
 ##! @todo: Dump meta
 ##! @param: 0 => meta ptr
 sub dump_post_meta {
-    my $meta_ptr = shift;
+    my $meta_ref = shift;
     print "==\n";
-    print "titile: ", $meta_ptr->{'title'}, "\n";
-    print "raw_date", $meta_ptr->{'raw_date'}, "\n";
-    print "org_file: ", $meta_ptr->{'org_file'}, "\n";
-    print "org_html_file: ", $meta_ptr->{'org_html_file'}, "\n";
-    print "org_img_path: ", $meta_ptr->{'org_img_path'}, "\n";
-    print "org_filename: ", $meta_ptr->{'org_filename'}, "\n";
-    print "basename: ", $meta_ptr->{'basename'}, "\n";
-    print "category: ", $meta_ptr->{'category'}, "\n";
-    print "post_path: ", $meta_ptr->{'post_path'}, "\n";
-    print "post_file: ", $meta_ptr->{'post_file'}, "\n";
-    print "post_img_path: ", $meta_ptr->{'post_img_path'}, "\n";
-    print "url_path: ", $meta_ptr->{'url_path'}, "\n";
-    print "url: ", $meta_ptr->{'url'}, "\n";
-    print "abs_url: ", $meta_ptr->{'abs_url'}, "\n";
-    print "url_img_path: ", $meta_ptr->{'url_img_path'}, "\n";
-    print "keywords: ", $meta_ptr->{'keywords'}, "\n";
-    print "description: ", $meta_ptr->{'description'}, "\n";
+    print "titile: ", $meta_ref->{'title'}, "\n";
+    print "raw_date", $meta_ref->{'raw_date'}, "\n";
+    print "org_file: ", $meta_ref->{'org_file'}, "\n";
+    print "org_html_file: ", $meta_ref->{'org_html_file'}, "\n";
+    print "org_img_path: ", $meta_ref->{'org_img_path'}, "\n";
+    print "org_filename: ", $meta_ref->{'org_filename'}, "\n";
+    print "basename: ", $meta_ref->{'basename'}, "\n";
+    print "category: ", $meta_ref->{'category'}, "\n";
+    print "post_path: ", $meta_ref->{'post_path'}, "\n";
+    print "post_file: ", $meta_ref->{'post_file'}, "\n";
+    print "post_img_path: ", $meta_ref->{'post_img_path'}, "\n";
+    print "url_path: ", $meta_ref->{'url_path'}, "\n";
+    print "url: ", $meta_ref->{'url'}, "\n";
+    print "abs_url: ", $meta_ref->{'abs_url'}, "\n";
+    print "url_img_path: ", $meta_ref->{'url_img_path'}, "\n";
+    print "keywords: ", $meta_ref->{'keywords'}, "\n";
+    print "description: ", $meta_ref->{'description'}, "\n";
 }
 
 ##! @todo: Dump category meta
 ##! @param: 0 => category meta ptr
 sub dump_category_meta {
-    my $category_meta_dict_ptr = shift;
+    my $category_meta_dict_ref = shift;
     print "==========category\n";
-    foreach my $level (keys %{$category_meta_dict_ptr}) {
+    foreach my $level (keys %{$category_meta_dict_ref}) {
         print "===", $level, "\n";
-        foreach my $post_meta_ptr (@{$category_meta_dict_ptr->{$level}}) {
-            print $post_meta_ptr->{'title'}, "\t";
+        foreach my $post_meta_ref (@{$category_meta_dict_ref->{$level}}) {
+            print $post_meta_ref->{'title'}, "\t";
         }
         print "\n";
     }
@@ -99,12 +99,12 @@ sub write_file {
 ##! @param: 1 => ptr to meta info
 sub get_category {
     my $org_path = shift;
-    my $meta_ptr = shift;
+    my $meta_ref = shift;
     $org_path =~ s/\.\///;
-    $meta_ptr->{'category'} =
-        substr($meta_ptr->{'org_file'}, length($org_path),
-               length($meta_ptr->{'org_file'}) - length($org_path) -
-               length($meta_ptr->{'org_filename'}));
+    $meta_ref->{'category'} =
+        substr($meta_ref->{'org_file'}, length($org_path),
+               length($meta_ref->{'org_file'}) - length($org_path) -
+               length($meta_ref->{'org_filename'}));
 }
 
 ##! @todo: Generate post meta info
@@ -116,7 +116,7 @@ sub gen_post_meta {
     my $org_path = shift;
     my $output_path = shift;
     my $base_url = shift;
-    my $post_meta_list_ptr = shift;
+    my $post_meta_list_ref = shift;
     
     $base_url =~ s/\/+$//g;
     my @search_dir_list = ($org_path);
@@ -135,19 +135,19 @@ sub gen_post_meta {
         $meta{'basename'} = basename($org_file, @suffix_list);
         get_category($org_path, \%meta);
 
-        push(@{$post_meta_list_ptr}, \%meta);
+        push(@{$post_meta_list_ref}, \%meta);
     }
 
-    foreach my $meta_ptr (@{$post_meta_list_ptr}) {
-#        next if not $meta_ptr->{'org_file'} eq "forge/Emacs/replace-semantic-code-helper-with-popup-from-auto-complete.org";
-#        print "\norg_file===> ", $meta_ptr->{'org_file'}, "\n\n";
+    foreach my $meta_ref (@{$post_meta_list_ref}) {
+#        next if not $meta_ref->{'org_file'} eq "forge/Emacs/replace-semantic-code-helper-with-popup-from-auto-complete.org";
+#        print "\norg_file===> ", $meta_ref->{'org_file'}, "\n\n";
 
         my $title = "";
         my $date = "";
         my $content = "";
         my $keywords = "";
         my $description = "";
-        if (not extract_html($meta_ptr->{'org_html_file'},
+        if (not extract_html($meta_ref->{'org_html_file'},
                              \$title, \$date, \$content)) {
 
             my $year = UnixDate($date, "%Y");
@@ -155,42 +155,69 @@ sub gen_post_meta {
             my $day = UnixDate($date, "%d");
 
             #my $post_path = "$output_path/posts/$year/$month/$day/";
-            my $post_path = $output_path . "/pages/" . dirname(File::Spec->abs2rel($meta_ptr->{'org_file'}, $org_path)) . "/";
-            my $post_file = $post_path . $meta_ptr->{'basename'} . ".html";
-            my $post_img_path = $post_path . $meta_ptr->{'basename'};
+            my $post_path = $output_path . "/pages/" . dirname(File::Spec->abs2rel($meta_ref->{'org_file'}, $org_path)) . "/";
+            my $post_file = $post_path . $meta_ref->{'basename'} . ".html";
+            my $post_img_path = $post_path . $meta_ref->{'basename'};
 
-            my $url_path = "pages/" . dirname(File::Spec->abs2rel($meta_ptr->{'org_file'}, $org_path)) . "/";
-            my $url = $url_path . $meta_ptr->{'basename'} . ".html";
+            my $url_path = "pages/"
+                . dirname(File::Spec->abs2rel($meta_ref->{'org_file'}, $org_path))
+                . "/";
+            my $url = $url_path . $meta_ref->{'basename'} . ".html";
             my $abs_url = $base_url . $url;
-            my $url_img_path = $url_path . $meta_ptr->{'basename'} . "/";
+            my $url_img_path = $url_path . $meta_ref->{'basename'} . "/";
 
-            extract_keywords(\$content, \$keywords);
+            #extract_keywords(\$content, \$keywords);
             extract_description(\$content, \$description);
             $description = $title . " " . $description;
 
-            $meta_ptr->{'keywords'} = $keywords;
-            $meta_ptr->{'description'} = $description;
+            $meta_ref->{'keywords'} = $keywords;
+            $meta_ref->{'description'} = $description;
 
-            $meta_ptr->{'post_path'} = $post_path;
-            $meta_ptr->{'post_file'} = $post_file;
-            $meta_ptr->{'post_img_path'} = $post_img_path;
+            $meta_ref->{'post_path'} = $post_path;
+            $meta_ref->{'post_file'} = $post_file;
+            $meta_ref->{'post_img_path'} = $post_img_path;
 
-            $meta_ptr->{'url_path'} = $url_path;
-            $meta_ptr->{'url'} = $url;
-            $meta_ptr->{'abs_url'} = $abs_url;
-            $meta_ptr->{'url_img_path'} = $url_img_path;
+            $meta_ref->{'url_path'} = $url_path;
+            $meta_ref->{'url'} = $url;
+            $meta_ref->{'abs_url'} = $abs_url;
+            $meta_ref->{'url_img_path'} = $url_img_path;
 
-            $meta_ptr->{'title'} = $title;
-            $meta_ptr->{'content'} = $content;
+            $meta_ref->{'title'} = $title;
+            $meta_ref->{'content'} = $content;
 
-            $meta_ptr->{'date'} = UnixDate($date, "%Y-%m-%d");
-            $meta_ptr->{'sort_date'} = UnixDate($date, "%Y%m%d%H%M%S");
+            $meta_ref->{'date'} = UnixDate($date, "%Y-%m-%d");
+            $meta_ref->{'sort_date'} = UnixDate($date, "%Y%m%d%H%M%S");
 
-            dump_post_meta($meta_ptr);
+            #dump_post_meta($meta_ref);
 
         }
     }
 
+}
+
+sub gen_attach_meta {
+    my $org_path = shift;
+    my $output_path = shift;
+    my $attach_meta_list_ref = shift;
+
+    my @search_dir_list = ($org_path);
+    my @attach_list;
+    list_all_files(\@search_dir_list, "*.pdf", \@attach_list);
+    foreach my $attach (@attach_list) {
+        my %meta = ();
+        
+        $meta{'attach_file'} = $attach;
+
+        my @suffix_list = (".pdf");
+        $meta{'basename'} = basename($attach, @suffix_list);
+        $meta{'url_path'} = "pages/"
+            . dirname(File::Spec->abs2rel($attach, $org_path))
+            . "/";
+        #print "----------", $meta{'url_path'}, "\n";
+        #print "----------", $meta{'attach_file'}, "\n";
+        
+        push(@{$attach_meta_list_ref}, \%meta);
+    }
 }
 
 ##! @todo: Generate cateogry meta info list
@@ -200,28 +227,28 @@ sub gen_post_meta {
 ##!   0 => success
 ##!   1 => failure
 sub gen_category_meta {
-    my $post_meta_list_ptr = shift;
-    my $category_meta_dict_ptr = shift;
-    foreach my $post_meta_ptr (@{$post_meta_list_ptr}) {
-        my @level_list = split(/\//, $post_meta_ptr->{'category'});
+    my $post_meta_list_ref = shift;
+    my $category_meta_dict_ref = shift;
+    foreach my $post_meta_ref (@{$post_meta_list_ref}) {
+        my @level_list = split(/\//, $post_meta_ref->{'category'});
         foreach my $level (@level_list) {
             next if length($level) == 0;
             my @post_list = ();
-            my $level_post_list_ptr = \@post_list;
-            if (exists $category_meta_dict_ptr->{$level}) {
-                $level_post_list_ptr = $category_meta_dict_ptr->{$level};
+            my $level_post_list_ref = \@post_list;
+            if (exists $category_meta_dict_ref->{$level}) {
+                $level_post_list_ref = $category_meta_dict_ref->{$level};
             }
-            push(@{$level_post_list_ptr}, $post_meta_ptr);
-            $category_meta_dict_ptr->{$level} = $level_post_list_ptr;
+            push(@{$level_post_list_ref}, $post_meta_ref);
+            $category_meta_dict_ref->{$level} = $level_post_list_ref;
         }
     }
 }
 
 sub list_all_files {
-    my $dir_list_ptr = shift;
+    my $dir_list_ref = shift;
     my $pattern = shift;
-    my $array_ptr = shift;
-    @{$array_ptr} = File::Find::Rule->file()->name($pattern)->in(@{$dir_list_ptr});
+    my $array_ref = shift;
+    @{$array_ref} = File::Find::Rule->file()->name($pattern)->in(@{$dir_list_ref});
 }
 
 ##! @todo: Export org files into html
@@ -230,12 +257,26 @@ sub list_all_files {
 ##!   0 => success
 ##!   1 => failure
 sub export_org {
-    my $meta_ptr = shift;
-    foreach my $meta_ptr (@{$meta_ptr}) {
-        next if ($meta_ptr->{'title'} eq "");
-        export_org_file($meta_ptr->{"org_file"},
+    my $meta_list_ref = shift;
+    foreach my $meta_ref (@{$meta_list_ref}) {
+        next if ($meta_ref->{'title'} eq "");
+        export_org_file($meta_ref->{"org_file"},
                         "Menglong Tan",
                         'tanmenglong@gmail.com');
+    }
+}
+
+sub export_attach {
+    my $meta_list_ref = shift;
+
+    my $cmd;
+    foreach my $meta_ref (@{$meta_list_ref}) {
+        #$cmd = "mkdir -p " . $meta_ref->{'url_path'};
+        #print $cmd, "\n";
+        `$cmd`;
+        $cmd = "cp \"" . $meta_ref->{'attach_file'} . "\" \"" . $meta_ref->{'url_path'} . "\"";
+        print "copying: " . $meta_ref->{'attach_file'}, "\n";
+        `$cmd`;
     }
 }
 
@@ -276,18 +317,18 @@ sub render_tree {
 ##!   0 => success
 ##!   1 => failure
 sub render_feed {
-    my $post_meta_list_ptr = shift;
+    my $post_meta_list_ref = shift;
     my $tmpl_file = shift;
     my $output_file = shift;
 
     my @tmpl_post_list = ();
-    foreach my $meta_ptr (@{$post_meta_list_ptr}) {
+    foreach my $meta_ref (@{$post_meta_list_ref}) {
         my %tmpl_post_info = ();
-        $tmpl_post_info{'title'} = $meta_ptr->{'title'};
-        $tmpl_post_info{'date'} = $meta_ptr->{'date'};
-        $tmpl_post_info{'sort_date'} = $meta_ptr->{'sort_date'};
-        $tmpl_post_info{'abs_url'} = $meta_ptr->{'abs_url'};
-        $tmpl_post_info{'content'} = $meta_ptr->{'content'};
+        $tmpl_post_info{'title'} = $meta_ref->{'title'};
+        $tmpl_post_info{'date'} = $meta_ref->{'date'};
+        $tmpl_post_info{'sort_date'} = $meta_ref->{'sort_date'};
+        $tmpl_post_info{'abs_url'} = $meta_ref->{'abs_url'};
+        $tmpl_post_info{'content'} = $meta_ref->{'content'};
         push(@tmpl_post_list, \%tmpl_post_info);
     }
 
@@ -296,8 +337,8 @@ sub render_feed {
         $b->{'sort_date'} cmp $a->{'sort_date'};
     } @tmpl_post_list;
 
-    foreach my $meta_ptr (@feed_post_list) {
-        delete($meta_ptr->{'sort_date'});
+    foreach my $meta_ref (@feed_post_list) {
+        delete($meta_ref->{'sort_date'});
     }
 
     my $last_build_date = strftime "%Y%m%d-%H%M\n", localtime;
@@ -312,10 +353,8 @@ sub render_feed {
 sub render_tree_html {
     my $tree = shift;
     my $html = shift;
-    #print %{$tree}, "\n";
     if ($tree->{'type'} eq 'cate') {
-        #print "cate\n";
-        ${$html} = ${$html} . "<li item-checked=\"true\" item-expanded=\"true\"><a href=\"#\">" . $tree->{'label'} . "</a>\n" 
+        ${$html} = ${$html} . "<li item-checked=\"true\" item-expanded=\"true\"><a href=\"" . $tree->{'path'} . "\" target=\"content\">" . $tree->{'label'} . "</a>\n" 
             ."<ul>\n";
         foreach my $child (keys %{$tree->{'children'}}) {
             render_tree_html($tree->{'children'}->{$child}, $html);
@@ -337,8 +376,8 @@ sub render_tree_html {
 ##!   0 => success
 ##!   1 => failure
 sub render_tmpl {
-    my $post_meta_list_ptr = shift;
-    my $category_meta_dict_ptr = shift;
+    my $post_meta_list_ref = shift;
+    my $category_meta_dict_ref = shift;
     my $tree = shift;
     my $tmpl_path = shift;
     my $org_path = shift;
@@ -355,39 +394,39 @@ sub render_tmpl {
 
     ### 2. render posts
     my $cmd = "";
-    foreach my $meta_ptr (@{$post_meta_list_ptr}) {
-        next if ($meta_ptr->{'title'} eq "");
+    foreach my $meta_ref (@{$post_meta_list_ref}) {
+        next if ($meta_ref->{'title'} eq "");
 
         # get img list
-        my @img_list = $meta_ptr->{'content'} =~ /<img src="(.*?)"/g;
-        my $category = $meta_ptr->{'category'};
+        my @img_list = $meta_ref->{'content'} =~ /<img src="(.*?)"/g;
+        my $category = $meta_ref->{'category'};
 
         # mkdir for post and images
         if (scalar @img_list > 0) {
-            $cmd = "mkdir -p " . $meta_ptr->{'post_img_path'};
+            $cmd = "mkdir -p " . $meta_ref->{'post_img_path'};
             `$cmd`;
             foreach my $img (@img_list) {
-                $cmd = "cp $org_path/$category/$img " . $meta_ptr->{'post_img_path'};
+                $cmd = "cp $org_path/$category/$img " . $meta_ref->{'post_img_path'};
                 `$cmd`;
             }
         } else {
-            $cmd = "mkdir -p " . $meta_ptr->{'post_path'};
+            $cmd = "mkdir -p " . $meta_ref->{'post_path'};
             `$cmd`;
         }
 
-        #path_rel2abs($base_url, $meta_ptr->{'url_img_path'}, 
-        #             \($meta_ptr->{'content'}));
-        path_rel2abs($base_url, $meta_ptr->{'basename'}, 
-                     \($meta_ptr->{'content'}));
+        #path_rel2abs($base_url, $meta_ref->{'url_img_path'}, 
+        #             \($meta_ref->{'content'}));
+        path_rel2abs($base_url, $meta_ref->{'basename'}, 
+                     \($meta_ref->{'content'}));
 
-        $post_tmpl->param(TITLE => $meta_ptr->{'title'});
-        $post_tmpl->param(DATE => $meta_ptr->{'raw_date'});
-        $post_tmpl->param(CONTENT => $meta_ptr->{'content'});
+        $post_tmpl->param(TITLE => $meta_ref->{'title'});
+        $post_tmpl->param(DATE => $meta_ref->{'raw_date'});
+        $post_tmpl->param(CONTENT => $meta_ref->{'content'});
 
-        $post_tmpl->param(KEYWORDS => $meta_ptr->{'keywords'});
-        $post_tmpl->param(DESCRIPTION => $meta_ptr->{'description'});
+        $post_tmpl->param(KEYWORDS => $meta_ref->{'keywords'});
+        $post_tmpl->param(DESCRIPTION => $meta_ref->{'description'});
 
-        write_file($meta_ptr->{'post_file'}, $post_tmpl->output);
+        write_file($meta_ref->{'post_file'}, $post_tmpl->output);
 
     }
 
@@ -405,7 +444,7 @@ sub render_tmpl {
                 "$tmpl_path/tree.html", "$output_path/tree.html");
 
     ### render feed
-    render_feed($post_meta_list_ptr, "$tmpl_path/feed.xml", "$output_path/feed.xml");
+    render_feed($post_meta_list_ref, "$tmpl_path/feed.xml", "$output_path/feed.xml");
 }
 
 ##! @todo: Extract info from html file
@@ -414,9 +453,9 @@ sub render_tmpl {
 ##!   1 => failure
 sub extract_html {
     my $html_file_path = shift;
-    my $title_ptr = shift;
-    my $date_ptr = shift;
-    my $content_ptr = shift;
+    my $title_ref = shift;
+    my $date_ref = shift;
+    my $content_ref = shift;
 
     my $find_title = 0;
     my $find_date = 0;
@@ -432,13 +471,13 @@ sub extract_html {
         my $file_content = $_;
         if ($stat == 0 &&
             $file_content =~ /<title>(.*?)<\/title>/) {
-            $$title_ptr = $1;
+            $$title_ref = $1;
             $find_title = 1;
 #            print("title:", $1, "\n");
             $stat = 1;
         } elsif ($stat == 1 &&
                  $file_content =~ /<meta name="generated" content="(.*?)"\/>/) {
-            $$date_ptr = $1;
+            $$date_ref = $1;
             $find_date = 1;
 #            print("date:", $1, "\n");
             $stat = 2;
@@ -454,7 +493,7 @@ sub extract_html {
             $stat = 3;
         } elsif($stat == 3 &&
                 $file_content =~ /<\/body>/) {
-            ${$content_ptr} = $content;
+            ${$content_ref} = $content;
             $find_content = 1;
             last;
         }
@@ -464,21 +503,21 @@ sub extract_html {
 }
 
 sub extract_keywords {
-    my $content_ptr = shift;
-    my $keywords_ptr = shift;
+    my $content_ref = shift;
+    my $keywords_ref = shift;
 
     foreach my $term (@keyword_dict) {
-        if (${$content_ptr} =~ /$term/ && length($term) > 6) {
-            ${$keywords_ptr} = ${$keywords_ptr} . "," . $term;
+        if (${$content_ref} =~ /$term/ && length($term) > 6) {
+            ${$keywords_ref} = ${$keywords_ref} . "," . $term;
         }
     }
 }
 
 sub extract_description {
-    my $content_ptr = shift;
-    my $description_ptr = shift;
+    my $content_ref = shift;
+    my $description_ref = shift;
 
-    my $desp = ${$content_ptr};
+    my $desp = ${$content_ref};
 
     $desp =~ s/[\r\n]//g;
     if (not $desp =~ /<div id="text-table-of-contents">(.*?)<\/div>/) {
@@ -489,7 +528,7 @@ sub extract_description {
     $desp =~ s/<.+?>/ /g;
     $desp =~ s/ +/ /g;
 
-    ${$description_ptr} = $desp;
+    ${$description_ref} = $desp;
 }
 
 ##! @todo: Change relative path to absolute in HTML
@@ -502,11 +541,11 @@ sub extract_description {
 sub path_rel2abs {
     my $base_url = shift;
     my $path = shift;
-    my $content_ptr = shift;
+    my $content_ref = shift;
     $base_url =~ s/\/+$//;
     $path =~ s/^\/+//;
-#    ${$content_ptr} =~ s/<img src="\.\//<img src="$base_url\/$path\//g;
-    ${$content_ptr} =~ s/<img src="\.\//<img src="$path\//g;
+#    ${$content_ref} =~ s/<img src="\.\//<img src="$base_url\/$path\//g;
+    ${$content_ref} =~ s/<img src="\.\//<img src="$path\//g;
 }
 
 sub gen_tree {
@@ -519,8 +558,10 @@ sub gen_tree {
     foreach my $post (@{$post_meta_list_ref}) {
         my $current = $root; 
         my $post_file = $post->{'post_file'};
+        my $path = "pages/";
         foreach my $cate (split(/\//, $post->{'category'})) {
             next if length($cate) == 0;
+            $path = $path . $cate . "/";
             if (! exists $current->{'children'}) {
                 $current->{'children'} = {};
             }
@@ -529,6 +570,7 @@ sub gen_tree {
                 $children->{$cate} = {};
                 $children->{$cate}->{'type'} = 'cate';
                 $children->{$cate}->{'label'} = $cate;
+                $children->{$cate}->{'path'} = $path;
             }
             $current = $children->{$cate};
         }
@@ -572,8 +614,12 @@ if (exists $opts{'s'}) {
     exit 0;
 }
 
+
+################################# main
+
 ### 0. init data
 my @post_meta_list;
+my @attach_meta_list;
 my %category_meta_dict;
 
 open(D, $opts{'d'}) or die "open keyword dict fail";
@@ -583,11 +629,12 @@ while (<D>) {
 }
 close(D);
 
-### 1. generate post meta info
+### 1. generate post & attachments meta info
 my $org_path = $opts{'i'};
 my $output_path = $opts{'o'} . "/";
 my $base_url = $opts{'b'} . "/";
 gen_post_meta($org_path, $output_path, $base_url, \@post_meta_list);
+gen_attach_meta($org_path, $output_path, \@attach_meta_list);
 
 # generate hierarchy for wiki tree
 
@@ -608,3 +655,6 @@ my $tmpl_path = $opts{'t'} . "/";
 render_tmpl(\@post_meta_list, \%category_meta_dict, $tree,
             $tmpl_path, $org_path, $base_url, $output_path);
 
+
+### 5. copy attachments to output folder
+export_attach(\@attach_meta_list);
