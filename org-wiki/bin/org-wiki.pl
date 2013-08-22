@@ -14,6 +14,7 @@ use File::Find::Rule;
 use Storable qw(dclone);
 use HTTP::Server::Brick;
 use File::Spec;
+use Loglib;
 
 #--------------- global variable --------------
 
@@ -91,7 +92,7 @@ sub write_file {
     open(OUT, ">" . $path);
     print OUT $content;
     close(OUT);
-    print "generating: ", $path, "\n";
+    Loglib::NOTICE_LOG("generating: " . $path);
 }
 
 ##! @todo: Get category info from org file path
@@ -274,7 +275,7 @@ sub export_attach {
         $cmd = "mkdir -p \"" . $meta_ref->{'url_path'} . "\"";
         `$cmd`;
         $cmd = "cp \"" . $meta_ref->{'attach_file'} . "\" \"" . $meta_ref->{'url_path'} . "\"";
-        print "copying: " . $meta_ref->{'attach_file'}, "\n";
+        Loglib::NOTICE_LOG("copying: " . $meta_ref->{'attach_file'} . " to " . $meta_ref->{'url_path'});
         `$cmd`;
     }
 }
@@ -353,11 +354,31 @@ sub render_tree_html {
     my $tree = shift;
     my $html = shift;
     if ($tree->{'type'} eq 'cate') {
-        ${$html} = ${$html} . "<li item-checked=\"true\" item-expanded=\"true\"><a href=\"" . $tree->{'path'} . "\" target=\"content\">" . $tree->{'label'} . "</a>\n" 
-            ."<ul>\n";
-        foreach my $child (keys %{$tree->{'children'}}) {
-            render_tree_html($tree->{'children'}->{$child}, $html);
+        my $expanded = "true";
+        if ($tree->{'fold'} == 1) {
+            $expanded = "false";
         }
+        ${$html} = ${$html} . "<li item-checked=\"true\" item-expanded=\"$expanded\"><a href=\"" . $tree->{'path'} . "\" target=\"content\">" . $tree->{'label'} . "</a>\n" 
+            ."<ul>\n";
+        my @cate_list = ();
+        my @post_list = ();
+
+        foreach my $child_name (keys %{$tree->{'children'}}) {
+            my $child = $tree->{'children'}->{$child_name};
+            if ($child->{'type'} eq 'cate') {
+                push(@cate_list, $child);
+            } elsif ($child->{'type'} eq 'post') {
+                push(@post_list, $child);
+            }
+        }
+
+        foreach my $child (@post_list) {
+            render_tree_html($child, $html);
+        }
+        foreach my $child (@cate_list) {
+            render_tree_html($child, $html);
+        }
+
         ${$html} = ${$html} . "</ul>\n</li>\n"
     } elsif (($tree->{'type'} eq 'post') && length($tree->{'data'}->{'url'}) > 1) {
         ${$html} = ${$html} . "<li><a href=\"" . $tree->{'data'}->{'url'} . "\" target=\"content\">" . $tree->{'data'}->{'title'} . "</a></li>\n";
@@ -463,7 +484,7 @@ sub extract_html {
     my $stat = 0;
     my $content = "";
 
-    print $html_file_path, "\n";
+    #print $html_file_path, "\n";
     open(HTML, "<" . $html_file_path);
     while (<HTML>) {
         chomp;
@@ -548,6 +569,7 @@ sub path_rel2abs {
 }
 
 sub gen_tree {
+    my $org_path = shift;
     my $post_meta_list_ref = shift;
     
     my $root = {};
@@ -558,9 +580,11 @@ sub gen_tree {
         my $current = $root; 
         my $post_file = $post->{'post_file'};
         my $path = "pages/";
+        my $cate_path = $org_path . "/";
         foreach my $cate (split(/\//, $post->{'category'})) {
             next if length($cate) == 0;
             $path = $path . $cate . "/";
+            $cate_path = $cate_path . $cate . "/";
             if (! exists $current->{'children'}) {
                 $current->{'children'} = {};
             }
@@ -570,6 +594,11 @@ sub gen_tree {
                 $children->{$cate}->{'type'} = 'cate';
                 $children->{$cate}->{'label'} = $cate;
                 $children->{$cate}->{'path'} = $path;
+                if ( -e $cate_path . ".TREE_FOLD") {
+                    $children->{$cate}->{'fold'} = 1;
+                } else {
+                    $children->{$cate}->{'fold'} = 0;
+                }
             }
             $current = $children->{$cate};
         }
@@ -637,7 +666,7 @@ gen_attach_meta($org_path, $output_path, \@attach_meta_list);
 
 # generate hierarchy for wiki tree
 
-my $tree = gen_tree(\@post_meta_list);
+my $tree = gen_tree($org_path, \@post_meta_list);
 
 #dump_tree($tree, 0);
 
