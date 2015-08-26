@@ -19,9 +19,8 @@ sub ERROR_LOG {
 }
 
 sub DEBUG_LOG {
-
-        my ($cont) = @_;
-        PrintLog("DEBUG",$cont);
+    my ($cont) = @_;
+    PrintLog("DEBUG",$cont);
 }
 
 sub FATAL_LOG {

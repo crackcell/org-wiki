@@ -12,7 +12,6 @@ use POSIX qw(strftime);
 use File::Basename;
 use File::Find::Rule;
 use Storable qw(dclone);
-use HTTP::Server::Brick;
 use File::Spec;
 use Loglib;
 use JSON;
@@ -24,17 +23,17 @@ my @keyword_dict;
 #------------------ function ------------------
 
 
-##! @todo: Show help message
+##! @todo: Show help messag
 sub usage {
     print("org-wiki.pl\n");
     print("Usage: -h -i -t -d -o -s\n");
-    print("  -h                  : show help message\n");
+    print("  -h                   : show help message\n");
     print("  -i \$org_file_folder : specify path for .org files", "\n");
     print("  -t \$template_path   : specify path for .tmpl files", "\n");
     print("  -o \$output_path     : specify path for output files", "\n");
     print("  -b \$base_url        : specify base url", "\n");
     print("  -d \$file            : keyword dict", "\n");
-    print("  -s                  : launch a simple http server", "\n");
+    print("  -s                   : launch a simple http server", "\n");
 }
 
 ##! @todo: Dump a list for debug
@@ -276,7 +275,7 @@ sub export_attach {
         $cmd = "mkdir -p \"" . $meta_ref->{"url_path"} . "\"";
         `$cmd`;
         $cmd = "cp \"" . $meta_ref->{"attach_file"} . "\" \"" . $meta_ref->{"url_path"} . "\"";
-        Loglib::NOTICE_LOG("copying: " . $meta_ref->{"attach_file"} . " to " . $meta_ref->{"url_path"});
+        #Loglib::NOTICE_LOG("copying: " . $meta_ref->{"attach_file"} . " to " . $meta_ref->{"url_path"});
         `$cmd`;
     }
 }
@@ -355,12 +354,9 @@ sub render_tree_html {
     my $tree = shift;
     my $html = shift;
     if ($tree->{"type"} eq "cate") {
-        # default expansion
         my $expanded = "false";
         if ($tree->{"meta"}->{"fold"} == 0) {
             $expanded = "true";
-        } else {
-            $expanded = "false";
         }
         ${$html} = ${$html} . "<li item-checked=\"true\" item-expanded=\"$expanded\"><a href=\"" . $tree->{"path"} . "\" target=\"content\"><b>" . $tree->{"meta"}->{"label"} . "</b></a>\n" 
             ."<ul>\n";
@@ -502,13 +498,13 @@ sub extract_html {
             $$title_ref = $1;
             $find_title = 1;
 #            print("title:", $1, "\n");
-            $stat = 1;
-        } elsif ($stat == 1 &&
-                 $file_content =~ /<meta name="generated" content="(.*?)"\/>/) {
-            $$date_ref = $1;
-            $find_date = 1;
-#            print("date:", $1, "\n");
             $stat = 2;
+        #} elsif ($stat == 1 &&
+        #         $file_content =~ /<meta name="generated" content="(.*?)"\/>/) {
+        #    $$date_ref = $1;
+        #    $find_date = 1;
+#            print("date:", $1, "\n");
+        #    $stat = 2;
         } elsif ($stat == 2 &&
                  $file_content =~ /<div id="table-of-contents">/) {
             $content = $content . $file_content;
@@ -518,6 +514,11 @@ sub extract_html {
                  not $file_content =~ /<\/body>/) {
             $content = $content . $file_content . "\n";
 #            print("4==>", $file_content, "\n");
+            if ($file_content =~ /<p class="date">Date: (.*?)</) {
+                $$date_ref = $1;
+                $find_date = 1;
+#                print("date:", $1, "\n");
+            }
             $stat = 3;
         } elsif($stat == 3 &&
                 $file_content =~ /<\/body>/) {
@@ -572,8 +573,8 @@ sub path_rel2abs {
     my $content_ref = shift;
     $base_url =~ s/\/+$//;
     $path =~ s/^\/+//;
-#    ${$content_ref} =~ s/<img src="\.\//<img src="$base_url\/$path\//g;
-    ${$content_ref} =~ s/<img src="\.\//<img src="$path\//g;
+#    ${$content_ref} =~ s/<img src="\.\//<img src="$path\//g;
+    ${$content_ref} =~ s/<img src="(?!http|https|ftp)/<img src="$path\//g;
 }
 
 sub gen_tree {
@@ -618,7 +619,7 @@ sub gen_tree {
                 }
                 $children->{$cate}->{"meta"}->{"label"} = $cate
                     unless exists $children->{$cate}->{"meta"}->{"label"};
-                $children->{$cate}->{"meta"}->{"fold"} = 0
+                $children->{$cate}->{"meta"}->{"fold"} = 1
                     unless exists $children->{$cate}->{"meta"}->{"fold"};
                 ## end of parse metadata
             }
@@ -651,13 +652,9 @@ $opts{"b"} = "";
 $opts{"t"} = "";
 $opts{"o"} = "";
 $opts{"d"} = "";
-getopts("hsi:t:o:b:d:", \%opts);
+getopts("hi:t:o:b:d:", \%opts);
 
-if (exists $opts{"s"}) {
-    my $server = HTTP::Server::Brick->new(port => 8080);
-    $server->mount( "/" => {path => "./"});
-    $server->start;
-} elsif (exists $opts{"h"} || length($opts{"i"}) == 0 ||
+if (exists $opts{"h"} || length($opts{"i"}) == 0 ||
     length($opts{"t"}) == 0 || length($opts{"o"}) == 0 ||
     length($opts{"b"}) == 0 || length($opts{"d"}) == 0) {
     usage();
