@@ -1,0 +1,2 @@
+class ForgeParser:
+    pass
