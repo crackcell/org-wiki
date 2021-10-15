@@ -6,10 +6,12 @@ from absl import app
 from absl import flags
 from absl import logging
 
+from orgwiki.parser import forgeparser
+from orgwiki.parser import orgparser
+
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('config', None, 'config file.')
-flags.DEFINE_string('template_dir', None, 'template path.')
 flags.DEFINE_boolean('debug', False, 'show debug info.')
 
 
@@ -26,7 +28,7 @@ org-wiki: static wiki generator.'''
     logging.info(header)
 
     if FLAGS.config is None:
-        logging.error('No config.')
+        logging.error('No config')
         exit(-1)
 
     if FLAGS.debug:
@@ -36,6 +38,11 @@ org-wiki: static wiki generator.'''
     config = parse_config_file(FLAGS.config)
     if FLAGS.debug:
         logging.debug(f'config: {config}')
+
+    org_files = forgeparser.parse_dir(config)
+
+    for org_file in org_files:
+        orgparser.parse_file(org_file)
 
 
 def parse_config_file(path):

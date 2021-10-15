@@ -1,2 +1,5 @@
 template_dir: ./templates
 template: crackcell
+
+forge_dir: ./forge
+output_dir: ./
