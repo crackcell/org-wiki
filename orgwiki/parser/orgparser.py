@@ -18,6 +18,7 @@ def parse_file(org_file, config):
 
     cate_info = parse_category(org_file, config)
 
+
 def parse_category(org_file, config):
     """
     parse category meta from path.
