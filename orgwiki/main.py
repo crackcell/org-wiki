@@ -42,7 +42,7 @@ org-wiki: static wiki generator.'''
     org_files = forgeparser.parse_dir(config)
 
     for org_file in org_files:
-        orgparser.parse_file(org_file)
+        orgparser.parse_file(org_file, config)
 
 
 def parse_config_file(path):
