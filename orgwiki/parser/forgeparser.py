@@ -1,5 +1,13 @@
 import glob
+
 from absl import logging
+from enum import Enum
+
+class DocNode:
+
+    class DocNodeType(Enum):
+        CATEGORY = 1
+        PAGE = 2
 
 
 def parse_dir(config):
