@@ -30,7 +30,7 @@ class DocNode:
             type_str = 'cate'
         elif self.node_type == DocNode.NodeType.PAGE:
             type_str = 'page'
-        print(f'{indent_str}:{type_str}: label:{self.label}, fold:{self.fold}, path:{self.path}')
+        print(f'{indent_str}{type_str}: label:{self.label}, fold:{self.fold}, path:{self.path}')
         for child in self.children:
             child.pprint(indent + 1)
 
@@ -48,7 +48,7 @@ class TreeParser:
     def __parse_cate(self, path):
         logging.debug(f'parsing cate: {path}')
         node = DocNode(node_type=DocNode.NodeType.CATEGORY, path=path)
-        node.label = os.path.basename(path)
+        meta = None
 
         with os.scandir(path) as it:
             for entry in it:
@@ -58,20 +58,22 @@ class TreeParser:
                 elif entry.name == 'META':
                     logging.debug(f'parsing meta: {entry.path}')
                     meta = self.__parse_cate_meta(entry.path)
-                    label = meta.get('label')
-                    if label is not None:
-                        node.label = label
-                    fold = meta.get('fold')
-                    if fold == 0:
-                        node.fold = False
-                    else:
-                        node.fold = True
                 elif entry.name.endswith('.org'):
                     html_file = re.sub('org$', 'html', entry.path)
                     if not utils.file_exists(html_file):
                         logging.warning(f'missing html file of {entry.name}')
                     page_node = self.__parse_page(entry.path)
                     node.children.append(page_node)
+
+        # parse meta
+        if meta:
+            label = meta.get('label')
+            if label is not None:
+                node.label = label
+            fold = meta.get('fold')
+            node.fold = False if fold == 0 else True
+        else:
+            node.label = os.path.basename(path)
 
         return node
 
