@@ -14,9 +14,10 @@ class DocNode:
         CATEGORY = 2
         PAGE = 3
 
-    def __init__(self, node_type=NodeType.PAGE):
+    def __init__(self, node_type=NodeType.PAGE, path=None):
         self.node_type = node_type
         self.children = []
+        self.path = path
 
 
 class ForgeParser:
@@ -41,9 +42,9 @@ class ForgeParser:
                     root.children.append(page_node)
 
     def __parse_cate(self, entry):
-        node = DocNode(node_type=DocNode.NodeType.CATEGORY)
+        node = DocNode(node_type=DocNode.NodeType.CATEGORY, path=path)
         return node
 
     def __parse_page(self, entry):
-        node = DocNode(node_type=DocNode.NodeType.PAGE)
+        node = DocNode(node_type=DocNode.NodeType.PAGE, path=path)
         return node
