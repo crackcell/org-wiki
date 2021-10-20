@@ -1,38 +1,28 @@
-import re
-import os.path
+class OrgFile:
 
-from absl import logging
-from orgwiki import utils
+    def __init__(self, title=None, author=None, date=''):
+        self.title = title
+        self.author = author
+        self.date = date
 
-
-def parse_file(org_file, config):
-    if not org_file.endswith('.org'):
-        utils.raise_exception_and_log(f'invalid file: {org_file}')
-
-    html_file = re.sub('org$', 'html', org_file)
-    logging.debug(f'parsing: {org_file}, {html_file}')
-
-    if not utils.file_exists(html_file):
-        logging.warning(f'missing html file of {org_file}')
-        return None
-
-    cate_info = parse_category(org_file, config)
+    def __str__(self):
+        return f'title:{self.title} author:{self.author} date:{self.date}'
 
 
-def parse_category(org_file, config):
-    """
-    parse category meta from path.
+def parse_org_file(path):
+    org = OrgFile()
 
-    :param org_file: org file path
-    :param config:  config
-    :return: array of category
-    """
+    with open(path) as file:
+        while True:
+            line = file.readline()
+            if not line:
+                break
+            line = line.strip()
+            if line.startswith('#+TITLE:') or line.startswith('#+title:'):
+                org.title = line[len('#+TITLE:'):].strip()
+            elif line.startswith('#+AUTHOR:') or line.startswith('#+author:'):
+                org.author = line[len('#+AUTHOR:'):].strip()
+            elif line.startswith('#+DATE:') or line.startswith('#+date:'):
+                org.date = line[len('#+DATE:'):].strip()
 
-    logging.debug(f'parsing category meta from {org_file}')
-
-    cate_str = org_file[len(config['forge_dir']):]
-    cate_parts = [s for s in cate_str.split('/') if len(s) > 0]
-    cate_parts = cate_parts[:-1]
-    logging.debug(f'cate str: {cate_str} → cate parts: {cate_parts}')
-
-    return cate_parts
+    return org

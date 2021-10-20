@@ -6,7 +6,7 @@ from absl import app
 from absl import flags
 from absl import logging
 
-from orgwiki.parser.forgeparser import ForgeParser
+from orgwiki.parser.treeparser import TreeParser
 from orgwiki.parser import orgparser
 
 FLAGS = flags.FLAGS
@@ -39,8 +39,9 @@ org-wiki: static wiki generator.'''
     if FLAGS.debug:
         logging.debug(f'config: {config}')
 
-    forge_parser = ForgeParser(forge_dir=config['forge_dir'])
-    forge_parser.parse()
+    forge_parser = TreeParser(forge_dir=config['forge_dir'])
+    root = forge_parser.parse()
+    root.pprint()
 
 
 def parse_config_file(path):
