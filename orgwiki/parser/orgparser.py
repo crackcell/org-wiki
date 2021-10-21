@@ -1,3 +1,5 @@
+import re
+
 class OrgFile:
 
     def __init__(self, title=None, author=None, date=''):
