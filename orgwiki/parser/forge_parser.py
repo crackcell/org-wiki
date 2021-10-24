@@ -65,19 +65,19 @@ def __parse_cate(path):
                 html_file = re.sub('org$', 'html', entry.path)
                 if not utils.file_exists(html_file):
                     logging.warning(f'missing html file of {entry.name}')
+                    continue
                 page_node = __parse_page(entry.path)
                 page_node.path = html_file
                 node.children.append(page_node)
 
     # parse meta
-    if meta:
+    node.label = os.path.basename(path)
+    if meta is not None:
         label = meta.get('label')
-        if label is not None:
+        if label is not None and len(label) > 0:
             node.label = label
         fold = meta.get('fold')
         node.fold = False if fold == 0 else True
-    else:
-        node.label = os.path.basename(path)
 
     return node
 
