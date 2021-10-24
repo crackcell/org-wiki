@@ -9,7 +9,5 @@
 * Usage
   Switch to org-wiki's folder, execute in command line:
   : make
-* Example
-  [[http://wiki.crackcell.com]]
 * Screenshot
   [[./screenshot.png]]
