@@ -6,7 +6,7 @@ from absl import logging
 from enum import Enum
 
 from orgwiki import utils
-from orgwiki.parser import orgparser
+from orgwiki.parser import org_parser
 
 
 class DocTreeNodeType(Enum):
@@ -41,7 +41,7 @@ class DocTreeNode:
         return output
 
 
-def parse_forge(path):
+def parse(path):
     root = __parse_cate(path)
     root.node_type = DocTreeNodeType.ROOT
     logging.debug(f'doc tree: \n{root.pprint()}')
@@ -66,6 +66,7 @@ def __parse_cate(path):
                 if not utils.file_exists(html_file):
                     logging.warning(f'missing html file of {entry.name}')
                 page_node = __parse_page(entry.path)
+                page_node.path = html_file
                 node.children.append(page_node)
 
     # parse meta
@@ -85,7 +86,7 @@ def __parse_page(path):
     logging.debug(f'parsing page: {path}')
     node = DocTreeNode(node_type=DocTreeNodeType.PAGE, path=path)
 
-    org_file = orgparser.parse_org_file(path)
+    org_file = org_parser.parse_org_file(path)
     logging.debug(f'parsing org file: {org_file}')
 
     node.label = org_file.title if org_file.title else 'untitled'

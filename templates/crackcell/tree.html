@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Menglong's Wiki</title>
+    <title>{{site_name}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- JavaScript plugins (requires jQuery) -->
     <script src="static/js/jquery-1.10.2.min.js"></script>
@@ -48,17 +48,7 @@
       <div id="treeview">
         <ul>
 
-    <li item-checked="true" item-expanded="true"><a href="forge/test/" target="content"><b>测试</b></a>
-    <ul>
-        <li item-checked="true" item-expanded="true"><a href="forge/test/test2/" target="content"><b>测试2</b></a>
-        <ul>
-            <li><a href="forge/test/test2/a.html" target="content">标题</a></li>
-        </ul>
-    </ul>
-    <li item-checked="true" item-expanded="false"><a href="forge/empty/" target="content"><b>empty</b></a>
-    <ul>
-    </ul>
-
+{{tree_html}}
 
         </ul>
       </div>
@@ -74,3 +64,4 @@
     <script src="static/js/bootstrap.min.js"></script>
   </body>
 </html>
+
