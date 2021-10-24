@@ -25,9 +25,9 @@ class DocTreeNode:
         self.fold = fold
 
     def pprint(self, indent=1):
-        indent_str = ' → ' * indent * 1
 
         type_str = 'root'
+        indent_str = ' → ' * indent
         if self.node_type == DocTreeNodeType.CATEGORY:
             type_str = 'cate'
         elif self.node_type == DocTreeNodeType.PAGE:
