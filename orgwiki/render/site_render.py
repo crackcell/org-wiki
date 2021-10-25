@@ -23,7 +23,7 @@ def __render_tree(tree, env, config):
         tree_tmpl = env.get_template('tree.html')
     except jinja2.exceptions.TemplateNotFound:
         logging.fatal('template not found tree.html')
-        exit(-1)
+        sys.exit(-1)
 
     return tree_tmpl.render(site_name=config['site_name'], tree_html=tree_snippet)
 
