@@ -24,14 +24,20 @@ class DocTreeNode:
         self.label = label
         self.fold = fold
 
-    def pprint(self, indent=1):
+    def pprint(self, indent=0):
 
-        type_str = 'root'
-        indent_str = ' → ' * indent
-        if self.node_type == DocTreeNodeType.CATEGORY:
+        indent_str = ''
+        if self.node_type == DocTreeNodeType.ROOT:
+            indent_str = '+ '
+            type_str = 'root'
+        elif self.node_type == DocTreeNodeType.CATEGORY:
+            indent_str = '|---' * indent + '+ '
             type_str = 'cate'
         elif self.node_type == DocTreeNodeType.PAGE:
+            indent_str = '|---' * indent + '> '
             type_str = 'page'
+        else:
+            raise Exception(f'invalid node type {self.node_type}')
 
         output = f'{indent_str}{type_str}: label:{self.label}, fold:{self.fold}, path:{self.path}\n'
 
