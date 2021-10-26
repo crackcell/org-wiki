@@ -7,7 +7,6 @@ def render(tree, config):
     env = Environment(loader=FileSystemLoader(template_dir))
 
     tree_html = __render_tree(tree, env, config)
-    print(tree_html)
     __write_file(f'{config["site_dir"]}/tree.html', tree_html)
 
 
