@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import yaml
 
 from absl import app
@@ -29,7 +30,7 @@ org-wiki: static wiki generator.'''
 
     if FLAGS.config is None:
         logging.error('No config')
-        exit(-1)
+        sys.exit(-1)
 
     if FLAGS.debug:
         logging.set_verbosity(logging.DEBUG)

@@ -1,3 +1,7 @@
+import logging
+import sys
+
+import jinja2.exceptions
 from jinja2 import Environment, FileSystemLoader
 from orgwiki.parser.forge_parser import DocTreeNodeType
 
@@ -12,7 +16,12 @@ def render(tree, config):
 
 def __render_tree(tree, env, config):
     tree_snippet = __render_tree_snippet(tree)
-    tree_tmpl = env.get_template('tree.html')
+    try:
+        tree_tmpl = env.get_template('tree.html')
+    except jinja2.exceptions.TemplateNotFound:
+        logging.fatal('template not found tree.html')
+        sys.exit(-1)
+
     return tree_tmpl.render(site_name=config['site_name'], tree_html=tree_snippet)
 
 
