@@ -7,14 +7,12 @@ def render(tree, config):
     env = Environment(loader=FileSystemLoader(template_dir))
 
     tree_html = __render_tree(tree, env, config)
+    print(tree_html)
     __write_file(f'{config["site_dir"]}/tree.html', tree_html)
 
 
 def __render_tree(tree, env, config):
-    tree_snippet = ''
-    for child in tree.children:
-        tree_snippet += __render_tree_snippet(child)
-
+    tree_snippet = __render_tree_snippet(tree)
     tree_tmpl = env.get_template('tree.html')
     return tree_tmpl.render(site_name=config['site_name'], tree_html=tree_snippet)
 
@@ -25,13 +23,29 @@ def __render_tree_snippet(node, indent=1):
     if href.startswith('./'):
         href = href.removeprefix('./')
 
-    if node.node_type == DocTreeNodeType.CATEGORY:
-        expand = 'false' if node.fold else 'true'
-        snippet = \
-            f'{indent_str}<li item-checked="true" item-expanded="{expand}"><a href="{href}/" target="content"><b>{node.label}</b></a>\n' + \
-            f'{indent_str}<ul>\n'
+    snippet = ''
 
+    if node.node_type == DocTreeNodeType.ROOT or node.node_type == DocTreeNodeType.CATEGORY:
+
+        if node.node_type == DocTreeNodeType.CATEGORY:
+            expand = 'false' if node.fold else 'true'
+            snippet = \
+                f'{indent_str}<li item-checked="true" item-expanded="{expand}"><a href="{href}/" target="content"><b>{node.label}</b></a>\n' + \
+                f'{indent_str}<ul>\n'
+
+        page_children = []
+        cate_children = []
         for child in node.children:
+            if child.node_type == DocTreeNodeType.PAGE:
+                page_children.append(child)
+            elif child.node_type == DocTreeNodeType.CATEGORY:
+                cate_children.append(child)
+            else:
+                raise Exception(f'invalid node type {child.node_type}')
+
+        for child in page_children:
+            snippet += __render_tree_snippet(child, indent + 1)
+        for child in cate_children:
             snippet += __render_tree_snippet(child, indent + 1)
 
         snippet += f'{indent_str}</ul>\n'

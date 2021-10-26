@@ -1,0 +1,10 @@
+# -*- mode: org -*-
+
+#+TITLE: 标题
+#+AUTHOR: Tan Menglong
+#+EMAIL: tanmenglong AT gmail DOT com
+#+DATE: Sun Aug 18 13:20:52 2013
+#+STYLE: <link rel="stylesheet" type="text/css" href="http://blog.crackcell.com/static/org-mode/org-mode.css" />
+
+* test
+  sss
