@@ -25,8 +25,6 @@ class DocTreeNode:
         self.fold = fold
 
     def pprint(self, indent=0):
-
-        indent_str = ''
         if self.node_type == DocTreeNodeType.ROOT:
             indent_str = '+ '
             type_str = 'root'
@@ -44,7 +42,7 @@ class DocTreeNode:
         for child in self.children:
             output += child.pprint(indent + 1)
 
-        return output
+        return output.strip()
 
 
 def parse(path):
