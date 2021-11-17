@@ -33,7 +33,7 @@ class DocTreeNode:
         elif self.node_type == DocTreeNodeType.PAGE:
             type_str = 'page'
 
-        output = f'{indent_str}{type_str}: label:{self.label}, fold:{self.fold}, path:{self.path}\n'
+        output = f'{indent_str}{type_str}: {self.label} [fold:{self.fold}] {self.path}\n'
 
         for child in self.children:
             output += child.pprint(indent + 1)
