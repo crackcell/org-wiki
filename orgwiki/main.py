@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
+import sys
 import yaml
 
 from absl import app
 from absl import flags
 from absl import logging
 
-from orgwiki.parser import doctreeparser
+from orgwiki.parser import forge_parser
+from orgwiki.render import site_render
 
 FLAGS = flags.FLAGS
 
@@ -28,7 +30,7 @@ org-wiki: static wiki generator.'''
 
     if FLAGS.config is None:
         logging.error('No config')
-        exit(-1)
+        sys.exit(-1)
 
     if FLAGS.debug:
         logging.set_verbosity(logging.DEBUG)
@@ -38,7 +40,8 @@ org-wiki: static wiki generator.'''
     if FLAGS.debug:
         logging.debug(f'config: {config}')
 
-    doctree = doctreeparser.parse_forge(config['forge_dir'])
+    tree = forge_parser.parse(config['forge_dir'])
+    site_render.render(tree, config)
 
 
 def parse_config_file(path):

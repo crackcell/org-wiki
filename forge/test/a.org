@@ -1,13 +1,10 @@
 # -*- mode: org -*-
 
-#+TITLE: README
+#+TITLE: 标题
 #+AUTHOR: Tan Menglong
 #+EMAIL: tanmenglong AT gmail DOT com
-#+DATE: Sun Aug 18 19:09:49 2013
+#+DATE: Sun Aug 18 13:20:52 2013
 #+STYLE: <link rel="stylesheet" type="text/css" href="http://blog.crackcell.com/static/org-mode/org-mode.css" />
 
-* Usage
-  Switch to org-wiki's folder, execute in command line:
-  : make
-* Screenshot
-  [[./screenshot.png]]
+* test
+  sss

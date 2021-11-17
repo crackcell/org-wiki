@@ -6,7 +6,7 @@ from absl import logging
 from enum import Enum
 
 from orgwiki import utils
-from orgwiki.parser import orgparser
+from orgwiki.parser import org_parser
 
 
 class DocTreeNodeType(Enum):
@@ -25,9 +25,9 @@ class DocTreeNode:
         self.fold = fold
 
     def pprint(self, indent=1):
-        indent_str = ' → ' * indent * 1
 
         type_str = 'root'
+        indent_str = ' → ' * indent
         if self.node_type == DocTreeNodeType.CATEGORY:
             type_str = 'cate'
         elif self.node_type == DocTreeNodeType.PAGE:
@@ -41,7 +41,7 @@ class DocTreeNode:
         return output
 
 
-def parse_forge(path):
+def parse(path):
     root = __parse_cate(path)
     root.node_type = DocTreeNodeType.ROOT
     logging.debug(f'doc tree: \n{root.pprint()}')
@@ -65,18 +65,19 @@ def __parse_cate(path):
                 html_file = re.sub('org$', 'html', entry.path)
                 if not utils.file_exists(html_file):
                     logging.warning(f'missing html file of {entry.name}')
+                    continue
                 page_node = __parse_page(entry.path)
+                page_node.path = html_file
                 node.children.append(page_node)
 
     # parse meta
-    if meta:
+    node.label = os.path.basename(path)
+    if meta is not None:
         label = meta.get('label')
-        if label is not None:
+        if label is not None and len(label) > 0:
             node.label = label
         fold = meta.get('fold')
         node.fold = False if fold == 0 else True
-    else:
-        node.label = os.path.basename(path)
 
     return node
 
@@ -85,7 +86,7 @@ def __parse_page(path):
     logging.debug(f'parsing page: {path}')
     node = DocTreeNode(node_type=DocTreeNodeType.PAGE, path=path)
 
-    org_file = orgparser.parse_org_file(path)
+    org_file = org_parser.parse_org_file(path)
     logging.debug(f'parsing org file: {org_file}')
 
     node.label = org_file.title if org_file.title else 'untitled'

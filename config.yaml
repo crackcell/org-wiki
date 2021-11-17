@@ -1,5 +1,7 @@
-template_dir: ./templates
-template: crackcell
-
 forge_dir: ./forge
-output_dir: ./
+
+template_dir: ./templates
+template_name: crackcell
+
+site_dir: ./
+site_name: Menglong's Wiki
